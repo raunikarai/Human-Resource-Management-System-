@@ -1,0 +1,20 @@
+# Render Blueprint for HRMS Lite Backend
+databases:
+  - name: hrms-db
+    plan: free
+    databaseName: hrms
+    user: hrms_user
+
+services:
+  - type: web
+    name: hrms-lite-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hrms-db
+          property: connectionString
+      - key: ALLOWED_ORIGINS
+        sync: false  # Set this in Render dashboard with your Vercel URL
